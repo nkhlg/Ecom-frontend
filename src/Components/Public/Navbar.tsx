@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,11 +10,29 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
+import { Button } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import { useNavigate } from "react-router-dom";
+import { googleLogout } from "@react-oauth/google";
+
+import { GoogleLogin } from "@react-oauth/google";
+
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import jwt_decode from "jwt-decode";
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  p: 4,
+};
 
 
-
-
-const settings = ['Profile', 'Account','Logout'];
+const settings = ['Login', 'Account','Logout'];
 
 function Navbar() {
   
@@ -29,8 +48,36 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const loginHandler = (credentialResponse: any) => {
 
+    console.log(credentialResponse.credential);
+
+
+
+    if (credentialResponse.credential !== undefined) {
+
+      setIsLoggedIn(true);
+
+
+
+      var decoded = jwt_decode(credentialResponse.credential);
+      
+      localStorage.setItem('token',credentialResponse.credential);
+
+
+      console.log(decoded);
+
+    }
+
+  };
+ 
   return (
+    
+    
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -74,22 +121,62 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              
+                <MenuItem onClick={handleCloseUserMenu}>
                     
   
-                  <Typography textAlign="center">{setting}
+                  
+                    <Button>Profile</Button>
                  
-                  </Typography>
+                 
+                  
+                  
+                </MenuItem>
+                <MenuItem onClick={handleCloseUserMenu}>
+                    
+  
+                <Button onClick={handleOpen}>Login</Button>
+                  
                   
                 </MenuItem>
                 
-              ))}
+              
             </Menu>
+            <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          
+          <GoogleOAuthProvider clientId="22805011057-sfgcohpdbgp7a0gaq229o0coqlcofrhq.apps.googleusercontent.com">
+
+<GoogleLogin
+
+  onSuccess={loginHandler}
+
+  onError={() => {
+
+    console.log("Login Failed");
+
+  }}
+
+  useOneTap
+
+/>
+
+</GoogleOAuthProvider>
+        </Box>
+      </Modal>
+      
+    
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
+    
+    
   );
 }
 export default Navbar;
