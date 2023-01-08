@@ -74,6 +74,15 @@ function Navbar() {
     }
 
   };
+  const logoutHandler = () => {
+
+    googleLogout();
+
+    setIsLoggedIn(false);
+
+    console.log("Logout Succesful");
+
+  };
  
   return (
     
@@ -126,16 +135,20 @@ function Navbar() {
                     
   
                   
-                    <Button>Profile</Button>
+                    Profile
                  
                  
                   
                   
                 </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={logoutHandler}>
+              Logout
+                </MenuItem >
+                
+                <MenuItem onClick={handleOpen}>
                     
   
-                <Button onClick={handleOpen}>Login</Button>
+                Login
                   
                   
                 </MenuItem>
