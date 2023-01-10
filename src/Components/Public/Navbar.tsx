@@ -20,6 +20,9 @@ import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import jwt_decode from "jwt-decode";
+import { Outlet } from 'react-router-dom';
+import { login } from '../../services/LoginService';
+import { profile } from '../../services/ProfileService';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -52,6 +55,7 @@ function Navbar() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const[pic,setPic]=useState('')
   const loginHandler = (credentialResponse: any) => {
 
     console.log(credentialResponse.credential);
@@ -67,9 +71,15 @@ function Navbar() {
       var decoded = jwt_decode(credentialResponse.credential);
       
       localStorage.setItem('token',credentialResponse.credential);
-
-
-      console.log(decoded);
+      
+    profile().then(data=>{
+      setPic(data.data.image);
+      console.log(data)
+      
+    })
+    
+      
+      
 
     }
 
@@ -86,7 +96,7 @@ function Navbar() {
  
   return (
     
-    
+    <>
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -111,7 +121,8 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 ,marginLeft:'1100px'}}>
             
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar/>
+              {!pic && <Avatar/>}
+              {pic && <Avatar src={pic}/>}
               </IconButton>
            
             <Menu
@@ -188,8 +199,10 @@ function Navbar() {
         </Toolbar>
       </Container>
     </AppBar>
-    
+    <Outlet/>
+    </>
     
   );
+  
 }
 export default Navbar;
