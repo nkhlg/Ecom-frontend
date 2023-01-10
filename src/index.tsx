@@ -7,11 +7,13 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Home from './Components/Public/Home';
 import Navbar from './Components/Public/Navbar';
 import Profile from './Components/Public/Profile';
+import AddProduct from './Components/Public/AddProduct';
 const router = createBrowserRouter([
   { path: "/", element: <App/>, children: [
     { path: "/", element: <Navbar/>, children : [
       { path : "home" , element : <Home/>},
-      { path : "profile" , element : <Profile/>}
+      { path : "profile" , element : <Profile/>},
+      { path : "addproduct" , element : <AddProduct/>}
     ]},
   ]},
 ]);

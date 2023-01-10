@@ -89,7 +89,8 @@ function Navbar() {
     googleLogout();
 
     setIsLoggedIn(false);
-
+    
+    
     console.log("Logout Succesful");
 
   };
