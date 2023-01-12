@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -21,7 +21,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import jwt_decode from "jwt-decode";
 import { Outlet } from 'react-router-dom';
-import { login } from '../../services/LoginService';
+
 import { profile } from '../../services/ProfileService';
 
 const style = {
@@ -33,11 +33,9 @@ const style = {
   bgcolor: 'background.paper',
   p: 4,
 };
-
-
-const settings = ['Login', 'Account','Logout'];
-
 function Navbar() {
+  
+ 
   
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -56,10 +54,10 @@ function Navbar() {
   const handleClose = () => setOpen(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const[pic,setPic]=useState('')
+  
   const loginHandler = (credentialResponse: any) => {
 
     console.log(credentialResponse.credential);
-
 
 
     if (credentialResponse.credential !== undefined) {
@@ -73,10 +71,12 @@ function Navbar() {
       localStorage.setItem('token',credentialResponse.credential);
       
     profile().then(data=>{
-      setPic(data.data.image);
-      console.log(data)
+      // setPic(data.data.image);
+      localStorage.setItem('image',data.data.image);
+      console.log(data.data.image)
       
     })
+    
     
       
       
@@ -90,7 +90,8 @@ function Navbar() {
 
     setIsLoggedIn(false);
     
-    
+    localStorage.removeItem('image');
+    localStorage.removeItem('token')
     console.log("Logout Succesful");
 
   };
@@ -98,7 +99,7 @@ function Navbar() {
   return (
     
     <>
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           
@@ -122,8 +123,10 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 ,marginLeft:'1100px'}}>
             
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              {!pic && <Avatar/>}
-              {pic && <Avatar src={pic}/>}
+              {!localStorage.getItem('image') && <Avatar/>}
+              {localStorage.getItem('image') && <Avatar src={localStorage.getItem('image') || ''}/>}
+              
+            
               </IconButton>
            
             <Menu
@@ -149,21 +152,18 @@ function Navbar() {
                   
                     Profile
                  
-                 
-                  
+          
                   
                 </MenuItem>
+                <MenuItem onClick={handleOpen}>
+                Login
+                </MenuItem>
+                
                 <MenuItem onClick={logoutHandler}>
               Logout
                 </MenuItem >
                 
-                <MenuItem onClick={handleOpen}>
-                    
-  
-                Login
-                  
-                  
-                </MenuItem>
+                
                 
               
             </Menu>
