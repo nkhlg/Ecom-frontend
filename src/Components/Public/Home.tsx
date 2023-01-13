@@ -19,7 +19,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import { useState ,useEffect} from "react";
-import { viewFilteredProduct, viewProduct } from '../../services/ProductServices';
+import { product, viewFilteredProduct, viewProduct } from '../../services/ProductServices';
 import { viewSortedProduct } from '../../services/ProductServices';
 import {FormControl, FormHelperText, Input, InputLabel, TextField} from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -31,6 +31,7 @@ const drawerWidth = 200;
 export default function PermanentDrawerLeft() {
   
   const [row, setRow] = useState<any[]>([])
+  const [srt,setSrt]=useState('')
 
   useEffect(() => {
 
@@ -40,24 +41,23 @@ export default function PermanentDrawerLeft() {
           
 
       })
+    
+
 
   }, []);
+ 
+
   const [min, setMin] = useState('');
 
   const [max, setMax] = useState('');
   const [btnDisabled, setBtnDisabled] = useState(true)
   const [err, setErr] = useState('')
+  const [ord,setOrd] = useState('asc')
   
   async function formSubmit(e: any) {
-
-
-
     e.preventDefault();
-    
-
-   
-
     await viewFilteredProduct({
+      ord:ord,
       min:min ,
       max: max
     }).then((data)=>{
@@ -65,13 +65,26 @@ export default function PermanentDrawerLeft() {
     })
       ;
   }
+async function reset(s:any){
+    setMax('')
+    setMin('')
+   await viewProduct().then((data) =>{
+      setRow(data.data)
+    })
+    
+    
+  
+    
+  }
   function sortAsc():any{
-    viewSortedProduct('asc').then((data) => {
+    setOrd('asc')
+    viewSortedProduct(min,max,'asc').then((data) => {
       setRow(data.data)
   })
   }
   function sortDesc():any{
-    viewSortedProduct('desc').then((data) => {
+    setOrd('desc')
+    viewSortedProduct(min,max,'desc').then((data) => {
       setRow(data.data)
   })
   }
@@ -122,24 +135,19 @@ export default function PermanentDrawerLeft() {
   <TextField inputProps={{ pattern: "^[0-9]*$" }} sx={{ marginTop: 1}} id="outlined-basic" name="min" label="Min" onChange={e => setMin(e.target.value)} variant="outlined"/>
   <TextField inputProps={{ pattern: "^[0-9]*$" }} sx={{ marginTop: 1}} id="outlined-basic" name="max" label="Max" onChange={e => setMax(e.target.value)} variant="outlined"/>
   <Button id='btn' sx={{ marginTop: 1}} type="submit" variant="contained">Filter</Button>
+  <Button onClick={reset} id='rst' sx={{ marginTop: 1}} type="reset" variant="contained">Reset</Button>
+  
   {err && <Alert severity="error">Min should be less than max</Alert>}
 </FormControl>
 </form>
-        
-        
-        
-        
-        
       </Drawer>
-      <AppBar sx={{marginTop:'64px',background:'none'}} >
+      <AppBar sx={{marginTop:'64px',background:'white'}} >
         <Toolbar>
             <Box sx={{marginLeft:'200px',color:'#000000'}}>
               Sort by Price:
-          <Button onClick={sortAsc}>Low to high</Button>
-          <Button onClick={sortDesc}>High to low</Button>
-          
+          <Button style={{color:'black'}} onClick={sortAsc}>Low to high</Button>
+          <Button style={{color:'black'}} onClick={sortDesc}>High to low</Button>
                </Box>
-            
         </Toolbar>
       </AppBar>
 
@@ -165,6 +173,7 @@ export default function PermanentDrawerLeft() {
       </CardContent>
       <CardActions>
         <Button sx={{backgroundColor:'#0380fc',color:'white',marginLeft:'225px'}} size="small">Add to cart</Button>
+        
         
       </CardActions>
     </Card>

@@ -58,7 +58,7 @@ function AddProduct(){
 
         <TextField sx={{ marginTop: 5, width: 500 }} id="outlined-basic" name="product_name" label="Product Name" variant="outlined" onChange={e => setName(e.target.value)} required />
 
-        <TextField sx={{ marginTop: 5, width: 500 }} id="outlined-basic" name="product_price" label="Price" variant="outlined" onChange={e => setPrice(e.target.value)} required />
+        <TextField inputProps={{ pattern: "^[0-9]*$" }} sx={{ marginTop: 5, width: 500 }} id="outlined-basic" name="product_price" label="Price" variant="outlined" onChange={e => setPrice(e.target.value)} required />
 
         <TextField sx={{ marginTop: 5, width: 500 }} id="outlined-basic" name="product_image" label="Image" variant="outlined" onChange={e => setImage(e.target.value)} required />
 

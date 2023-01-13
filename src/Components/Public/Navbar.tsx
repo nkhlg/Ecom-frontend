@@ -12,10 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { Button } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
 
 import { GoogleLogin } from "@react-oauth/google";
+import Dialog from '@mui/material/Dialog';
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -52,7 +53,7 @@ function Navbar() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const[pic,setPic]=useState('')
   
   const loginHandler = (credentialResponse: any) => {
@@ -92,7 +93,8 @@ function Navbar() {
     
     localStorage.removeItem('image');
     localStorage.removeItem('token')
-    console.log("Logout Succesful");
+    alert('You have been logged out')
+
 
   };
  
@@ -107,7 +109,7 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/home"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -145,23 +147,18 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              
-                <MenuItem onClick={handleCloseUserMenu}>
-                    
-  
-                  
-                    Profile
-                 
-          
-                  
-                </MenuItem>
-                <MenuItem onClick={handleOpen}>
-                Login
-                </MenuItem>
+            { isLoggedIn &&  <Link to="/profile" style={{textDecoration:'none',color:'black'}}><MenuItem>Profile</MenuItem ></Link>  }
                 
-                <MenuItem onClick={logoutHandler}>
+                
+          { isLoggedIn &&  <Link to="/addproduct" style={{textDecoration:'none',color:'black'}}><MenuItem>Add Product</MenuItem ></Link>  }
+                
+                { !isLoggedIn && <MenuItem style={{color:'black'}} onClick={handleOpen}>
+                Login
+                </MenuItem>}
+                
+            { isLoggedIn &&   <MenuItem style={{color:'black'}}  onClick={logoutHandler}>
               Logout
-                </MenuItem >
+                </MenuItem >}
                 
                 
                 

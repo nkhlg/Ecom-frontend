@@ -9,14 +9,14 @@ const viewProduct = async ()=>{
     console.log(response.data)
     return response.data;
 }
-const viewSortedProduct = async (s:any)=>{
-    var response = await axios.get('/product',{ params: { sort: s } });
+const viewSortedProduct = async (min:any,max:any,ord:any)=>{
+    var response = await axios.get('/product',{ params: { sort: ord,min:min,max:max } });
     console.log(response.data)
     return response.data;
 }
 const viewFilteredProduct = async (s:any)=>{
     
-    var response = await axios.get('/product',{ params: { min: s.min,max:s.max } });
+    var response = await axios.get('/product',{ params: { min: s.min,max:s.max,sort:s.ord } });
     console.log(response.data)
     return response.data;
 }
