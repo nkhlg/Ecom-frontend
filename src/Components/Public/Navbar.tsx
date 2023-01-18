@@ -100,7 +100,7 @@ function Navbar() {
                 textDecoration: "none",
               }}
             >
-              Navbar
+              KICKS
             </Typography>
             <Box sx={{ flexGrow: 0, marginLeft: "1100px" }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
